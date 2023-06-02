@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model NavMenu {
+  id    Int     @id @default(autoincrement())
+  path String   @unique
+  name  String
+  funcs NavFunc[]
+}
+
+model NavFunc {
+  id        Int     @id @default(autoincrement())
+  path   String     @unique
+  name     String  @unique
+  nav_path  String
+  parent_nav    NavMenu    @relation(fields: [nav_path], references: [path])
+  messages ApiMessage[]
+}
+
+
+//  Job In   Desc: F2 submit
+//  send message @28          | send message @ 83          
+model ApiMessage {
+  id  Int @id @default(autoincrement())
+  name String
+  func String
+  hdr String
+  edition0 String
+  sendto0 String
+  send_p0 String[]
+  received0 String
+  received_p0 String[]
+  comment0 String?
+  edition1 String
+  sendto1 String
+  send_p1 String[]
+  received1 String
+  received_p1 String[]
+  comment1 String?
+  scenario String?
+  scenario_no Int?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) @updatedAt
+  ref_func NavFunc     @relation(fields: [func],references: [name])
+}
